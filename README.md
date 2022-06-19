@@ -1,24 +1,15 @@
-# README
+## flying
+Make life more automatical.
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+### Create nginx logs
 
-Things you may want to cover:
+```
+touch webapp/log/nginx.access.log
+touch webapp/log/nginx.error.log
+```
 
-* Ruby version
+### Generate secret key and put it into docker-compose.yml
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+```
+RAILS_ENV=production rake secret
+```
