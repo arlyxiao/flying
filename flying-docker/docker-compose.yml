@@ -1,0 +1,39 @@
+version: "3.9"
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+      # - "443:443"
+    depends_on:
+      - webapp
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ../:/webapp:rw
+    networks:
+      default:
+        aliases:
+          - localhost
+
+  webapp:
+    build:
+      context: ./docker/webapp
+      dockerfile: Dockerfile
+    command: >
+       bash -c "bundle install &&
+                RAILS_ENV=production rails assets:precompile &&
+                bundle exec puma -e production -C config/puma.rb"
+
+    environment:
+      # SECRET_KEY_BASE: 'Please run RAILS_ENV=production rake secret'
+      # RAILS_SERVE_STATIC_FILES: 'true'
+      RAILS_ENV: production
+
+    volumes:
+      - ../:/webapp
+      - bundler_gems:/usr/local/bundle
+    ports:
+      - "3000:3000"
+
+volumes:
+  bundler_gems:
